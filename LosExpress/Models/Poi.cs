@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace LosExpress.Models
 {
-    public class Poi
+    public class Poi2
     {
         public string Name { get; set; }
 

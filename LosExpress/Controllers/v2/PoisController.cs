@@ -9,6 +9,7 @@ using Btc.Web.Logger;
 using Btc.Web.Utils;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
+using System.Text.Json;
 //using Microsoft.AspNetCore.Components;
 
 
@@ -26,8 +27,6 @@ namespace LosExpress.Controllers.v2
         private readonly IBtcLogger<PoisController> _logger;
         private readonly IErrorResponseHelper _errorResponseHelper;
 
-        //[Inject]
-        //public IHttpClientFactory HttpClientFactory { get; set; }
         private readonly IHttpClientFactory _httpClientFactory;
 
         public PoisController(IPoiService poiService, 
@@ -45,8 +44,15 @@ namespace LosExpress.Controllers.v2
         [HttpGet]
         public async Task<string> Get()
         {
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = true
+            };
+
             string query = "searchType=all&radius=0&reqCoordType=WGS84GEO&centerLon=126.9012528&centerLat=37.4341335&count=20&version=1&searchKeyword=스타벅스";// "foxpro87";
-            var httpClient = this._httpClientFactory.CreateClient("GitHub");
+            var httpClient = this._httpClientFactory.CreateClient("LOS");
             var accountInfo = await httpClient.GetStringAsync($"/fts/pois?{query}");
 
             Console.WriteLine("###################################test###");
