@@ -13,6 +13,8 @@ using Btc.Swagger;
 using Btc.Web.Utils;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Hosting;
+using Polly;
+using System;
 
 namespace LosExpress
 {
@@ -46,15 +48,12 @@ namespace LosExpress
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
-            services.AddHttpClient("GitHub", client => {
-                client.BaseAddress = new System.Uri("https://api.github.com/");
-                client.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
-                client.DefaultRequestHeaders.Add("User-Agent", "HttpClientFactoryExample");
-            });
-
-            // Add health check dependencies and checks
-            services
-                .AddHealthChecks();
+            services.
+                AddHttpClient("LOS", client =>
+            {
+                client.BaseAddress = new System.Uri("https://fts-bmw.sktelecom.com/");
+                client.DefaultRequestHeaders.Add("appKey", "5w50n2t2-2d43-r6dh-4jd7-k3uk2uzgg25j");
+            }).AddTransientHttpErrorPolicy(x => x.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(300)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

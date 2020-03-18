@@ -45,9 +45,9 @@ namespace LosExpress.Controllers.v2
         [HttpGet]
         public async Task<string> Get()
         {
-            string accountName = "Elfocrash";// "foxpro87";
+            string query = "searchType=all&radius=0&reqCoordType=WGS84GEO&centerLon=126.9012528&centerLat=37.4341335&count=20&version=1&searchKeyword=스타벅스";// "foxpro87";
             var httpClient = this._httpClientFactory.CreateClient("GitHub");
-            var accountInfo = await httpClient.GetStringAsync($"users/{accountName}");
+            var accountInfo = await httpClient.GetStringAsync($"/fts/pois?{query}");
 
             Console.WriteLine("###################################test###");
             //return new string[] { "value1", "value2" };
