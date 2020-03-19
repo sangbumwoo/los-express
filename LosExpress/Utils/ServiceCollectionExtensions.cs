@@ -12,7 +12,7 @@ namespace LosExpress.Utils
         {
             // Add your service registrations here
             serviceCollection.AddTransient<IExampleUsersService, ExampleUsersService>();
-            serviceCollection.AddTransient<IPoiService, PoiService>();
+            //serviceCollection.AddTransient<IPoiService, PoiService>();
 
             return serviceCollection;
         }

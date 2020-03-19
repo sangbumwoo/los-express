@@ -49,12 +49,12 @@ namespace LosExpress
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services.
-                AddHttpClient("LOS", client =>
+                AddHttpClient("SktLos", client =>
                 {
                     client.BaseAddress = new System.Uri("https://fts-bmw.sktelecom.com/");
                     client.DefaultRequestHeaders.Add("appKey", "5w50n2t2-2d43-r6dh-4jd7-k3uk2uzgg25j");
                 })
-                .AddTransientHttpErrorPolicy(x => x.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(300)));
+            .AddTransientHttpErrorPolicy(x => x.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(300)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -77,7 +77,7 @@ namespace LosExpress
                 endpoints.MapControllers();
                 endpoints.MapBtcHealth();
                 endpoints.MapBtcInfo();
-                endpoints.MapBtcHealthUpstreams();
+                //endpoints.MapBtcHealthUpstreams();
             });
             app.UseBtcSwagger(provider);
         }
