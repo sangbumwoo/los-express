@@ -10,6 +10,7 @@ using LosExpress.Models.Bmw;
 using LosExpress.Models.Skt;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
+using System;
 
 namespace LosExpress.Controllers.v2
 {
@@ -55,14 +56,148 @@ namespace LosExpress.Controllers.v2
             var httpClient = this._httpClientFactory.CreateClient("SktLos");
             var jsonString = await httpClient.GetStringAsync($"/fts/pois?{query}");
             SktLos sktLos = JsonSerializer.Deserialize<SktLos>(jsonString, options);
-            var bmwPois = new List<Models.Bmw.Pois>()
+            //var sktPoiList = sktLos.SearchPoiInfo.Pois.Poi;
+
+            var bmwPois = new List<Models.Bmw.Pois>();
+            foreach (var sktPoi in sktLos.SearchPoiInfo.Pois.Poi)
             {
-                new Models.Bmw.Pois()
+                var bmwPoi = new Models.Bmw.Pois()
                 {
                     Provider = _configuration.GetValue<string>("SKT:Provider"),
-                    ProviderId = _configuration.GetValue<string>("SKT:ProviderId")
-                }
-            };
+                    ProviderId = _configuration.GetValue<string>("SKT:ProviderId"),
+                    ProviderPOIid = sktPoi.Id,
+                    Id = -1,
+                    Name = sktPoi.Name,
+                    Address = new Models.Bmw.Address() {
+                        Street = "TODO",
+                        //    "street": "Museumsinsel",
+                        //"intersectingStreets": [],
+                        //"houseNumber": "1",
+                        //"postalCode": "80538",
+                        //"city": "Munich",
+                        //"country": "Germany",
+                        //"countryCode": "DEU",
+                        //"region": "Bavaria",
+                        //"regionCode": null,
+                        //"settlement": null
+                    },
+                    Latitude = Convert.ToDouble(sktPoi.NoorLat),
+                    Longitude = Convert.ToDouble(sktPoi.NoorLon),
+                    Entrances = new List<Entrance>()
+                    {
+                        new Entrance()
+                        {
+                            Latitude = Convert.ToDouble(sktPoi.FrontLat),
+                            Longitude = Convert.ToDouble(sktPoi.FrontLon),
+                            Clearance = null,
+                            Name = null
+                        }
+                    },
+                    Exits = new List<object>(),
+
+
+
+
+/*
+                "provider": "Here",
+                "providerId": "75",
+                "providerPOIid": "276u281z-da9f60bd0ba14ba7a1fbfb6afe13b2c9",
+                "id": -1,
+                "name": "Deutsches Museum",
+                "address": {
+                    "street": "Museumsinsel",
+                    "intersectingStreets": [],
+                    "houseNumber": "1",
+                    "postalCode": "80538",
+                    "city": "Munich",
+                    "country": "Germany",
+                    "countryCode": "DEU",
+                    "region": "Bavaria",
+                    "regionCode": null,
+                    "settlement": null
+                },
+                "latitude": 48.13034,
+                "longitude": 11.58405,
+                "entrances": [
+                    {
+                        "name": null,
+                        "clearance": null,
+                        "latitude": 48.13056,
+                        "longitude": 11.58337
+                    }
+                ],
+                "exits": [],
+                "distance": 3.607,
+                "travelTime": null,
+                "businessHours": {
+                    "hours": "Mon-Sun: 09:00 - 17:00",
+                    "label": "Opening hours",
+                    "status": "C",
+                    "statusLabel": null,
+                    "compressed": null,
+                    "structured": [
+                        {
+                            "start": "T090000",
+                            "duration": "PT08H00M",
+                            "recurrence": "FREQ:DAILY;BYDAY:MO,TU,WE,TH,FR,SA,SU"
+                        }
+                    ]
+                },
+                "attributes": [],
+                "categories": [
+                    {
+                        "id": null,
+                        "vehicleCategoryId": 21070,
+                        "hierarchy": [],
+                        "realTimeCategoryId": null,
+                        "providerCategories": []
+                    }
+                ],
+                "details": {
+                    "parking": null,
+                    "refueling": null,
+                    "charging": null,
+                    "dealer": null,
+                    "online": {
+                        "isPOI": true,
+                        "chainIds": [],
+                        "vicinity": "Museumsinsel 1\n80538 Munich",
+                        "contacts": [
+                            {
+                                "name": "Phone",
+                                "label": "Phone",
+                                "value": "+498921791"
+                            },
+                            {
+                                "name": "Website",
+                                "label": "Website",
+                                "value": "http://www.deutsches-museum.de/en"
+                            }
+                        ],
+                        "reviewSummary": {
+                            "provider": "Yelp",
+                            "ciVersion": "V1",
+                            "averageRating": 4.0,
+                            "reviewCount": 96,
+                            "ratingIconId": "40",
+                            "priceRange": ""
+                        },
+                        "reviews": []
+                    },
+                    "phonemes": null,
+                    "common": {
+                        "announcements": null,
+                        "image": "https://s3-media0.fl.yelpcdn.com/bphoto/-pz39cRUDEbHFb41dTYbeQ/o.jpg",
+                        "rawAdditions": null,
+                        "boundingBox": null,
+                        "priceLabel": null
+                    },
+                    "childrenPois": []
+*/
+
+                };
+                bmwPois.Add(bmwPoi);
+            }
             BmwLos bmwLos = new BmwLos()
             {
                 Status = 200,
