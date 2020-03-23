@@ -51,8 +51,9 @@ namespace LosExpress
             services.
                 AddHttpClient("SktLos", client =>
                 {
-                    client.BaseAddress = new System.Uri("https://fts-bmw.sktelecom.com/");
-                    client.DefaultRequestHeaders.Add("appKey", "5w50n2t2-2d43-r6dh-4jd7-k3uk2uzgg25j");
+                    client.BaseAddress = new System.Uri(Configuration.GetValue<string>("SKT:BaseAddress"));
+                    client.DefaultRequestHeaders.Add(Configuration.GetValue<string>("SKT:ApiKeyHeaderName"), 
+                        Configuration.GetValue<string>("SKT:ApiKey"));
                 })
             .AddTransientHttpErrorPolicy(x => x.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(300)));
         }

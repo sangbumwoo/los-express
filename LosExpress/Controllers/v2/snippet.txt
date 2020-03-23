@@ -1,1 +1,49 @@
-﻿
+﻿namespace CommuteService.Utils
+{
+    public static class QueryStringUtility
+    {
+        public static string ConvertToQueryString(this object obj)
+        {
+            string result = string.Empty;
+
+            if (obj != null)
+            {
+                var properties = from p in obj.GetType().GetProperties()
+                                 where p.GetValue(obj, null) != null
+                                 select p.GetCustomAttribute<JsonPropertyAttribute>().PropertyName + "=" + HttpUtility.UrlEncode(p.GetValue(obj, null).ToString());
+
+                result = String.Join("&", properties.ToArray());
+            }
+
+            return result;
+        }
+    }
+}
+
+
+
+
+
+            //        locationData = new SpData()
+            //        {
+            //            id = location.id,
+            //            latitude = location.latitude,
+            //            longitude = location.longitude,
+            //            streetAddress = sktResponse.AddressInfo.FullAddress,
+            //            address = new Address()
+            //            {
+            //                country = CountryName,
+            //                formattedAddress = sktResponse.AddressInfo.FullAddress,
+            //                city = sktResponse.AddressInfo.CityDo,
+            //                street = sktResponse.AddressInfo.GuGun + (!string.IsNullOrEmpty(sktResponse.AddressInfo.LegalDong) ? sktResponse.AddressInfo.RoadName.PrefixWithSpaceForNonEmpty() : sktResponse.AddressInfo.EupMyun.PrefixWithSpaceForNonEmpty() + sktResponse.AddressInfo.RoadName.PrefixWithSpaceForNonEmpty()),
+            //                houseNumber = sktResponse.AddressInfo.BuildingName,
+            //                postalCode = sktPostalCodeResponse != null
+            //                            && sktPostalCodeResponse.CoordinateInfo != null
+            //                            && sktPostalCodeResponse.CoordinateInfo.Coordinate != null ? sktPostalCodeResponse.CoordinateInfo.Coordinate.First().Zipcode : string.Empty
+            //            }
+            //        };
+                     
+            //         */
+
+            //    }
+            //};
